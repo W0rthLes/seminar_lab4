@@ -13,4 +13,6 @@ services:
     restart: always
     privileged: true
     environment:
-      - NTP_SERVERS=pool.ntp.org
+      - NTP_SERVERS=time.google.com
+      - CHRONY_DEBUG=1
+      - TZ=Europe/Moscow
