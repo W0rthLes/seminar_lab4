@@ -17,7 +17,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh './venv/bin/python -m unittest discover'
+                sh './venv/bin/python -m xmlrunner discover -o test-reports'
             }
         }
     }
