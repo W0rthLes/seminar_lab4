@@ -1,7 +1,9 @@
 version: '3'
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     volumes:
@@ -12,5 +14,3 @@ services:
     privileged: true
     environment:
       - NTP_SERVERS=pool.ntp.org
-volumes:
-  jenkins_home:
