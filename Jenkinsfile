@@ -10,20 +10,21 @@ pipeline {
 
         stage('Install dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'python3 -m venv venv'
+                sh './venv/bin/pip install -r requirements.txt'
             }
         }
 
         stage('Test') {
             steps {
-                sh 'python -m unittest discover'
+                sh './venv/bin/python -m unittest discover'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: '**/tests/*.py', allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/test-reports/*.xml', allowEmptyArchive: true
         }
     }
 }
