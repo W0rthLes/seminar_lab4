@@ -1,4 +1,3 @@
-version: '3'
 services:
   jenkins:
     build:
@@ -6,13 +5,34 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    networks:
+      ntp_network:
+        ipv4_address: 192.168.96.3
     volumes:
       - ./jenkins_data:/var/jenkins_home
-  ntp:
-    image: cturra/ntp
-    restart: always
-    privileged: true
     environment:
-      - NTP_SERVERS=time.google.com
-      - CHRONY_DEBUG=1
       - TZ=Europe/Moscow
+    privileged: true  # Ensure the Jenkins container can sync time from host
+
+  chrony:
+    image: publicarray/chrony:latest
+    container_name: Chrony
+    restart: unless-stopped
+    ports:
+      - "123:123/udp"
+    volumes:
+      - ./chrony/chrony.conf:/etc/chrony/chrony.conf
+    cap_add:
+      - SYS_TIME
+    environment:
+      - TZ=Europe/Moscow
+    networks:
+      ntp_network:
+        ipv4_address: 192.168.96.2
+
+networks:
+  ntp_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.96.0/20
